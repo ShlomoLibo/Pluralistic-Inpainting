@@ -1,8 +1,8 @@
 import argparse
 import os
 import torch
-from mask_models import E1, E2, D_A, D_B_removal
-from mask_utils import load_model_for_eval, load_model_for_eval_pretrained, removal
+from .mask_models import E1, E2, D_A, D_B_removal
+from .mask_utils import load_model_for_eval, load_model_for_eval_pretrained, removal
 
 
 def eval(args):
