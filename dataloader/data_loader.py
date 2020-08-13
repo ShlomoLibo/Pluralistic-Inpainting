@@ -10,6 +10,7 @@ class CreateDataset(data.Dataset):
     def __init__(self, opt):
         self.opt = opt
         self.img_paths, self.img_size = make_dataset(opt.img_file)
+        self.img_feature_paths, self.img_feature_size = make_dataset(opt.img_feature_file)
         # provides random file for training and testing
         if opt.mask_file != 'none':
             self.mask_paths, self.mask_size = make_dataset(opt.mask_file)
@@ -20,7 +21,9 @@ class CreateDataset(data.Dataset):
         img, img_path = self.load_img(index)
         # load mask
         mask = self.load_mask(img, index)
-        return {'img': img, 'img_path': img_path, 'mask': mask}
+        # load feature image
+        img_feature = self.load_img_feature(index)
+        return {'img': img, 'img_path': img_path, 'mask': mask, 'img_feature': img_feature}
 
     def __len__(self):
         return self.img_size
@@ -35,6 +38,14 @@ class CreateDataset(data.Dataset):
         img = self.transform(img_pil)
         img_pil.close()
         return img, img_path
+
+    def load_img_feature(self, index):
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
+        img_feature_path = self.img_paths[index % self.img_feature_size]
+        img_feature_pil = Image.open(img_feature_path).convert('RGB')
+        img_feature = self.transform(img_feature_pil)
+        img_feature_pil.close()
+        return img_feature, img_feature_path
 
     def load_mask(self, img, index):
         """Load different mask types for training and testing"""

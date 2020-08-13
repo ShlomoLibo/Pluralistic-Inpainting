@@ -33,6 +33,10 @@ def define_d(input_nc=3, ndf=64, img_f=512, layers=6, norm='none', activation='L
     return init_net(net, init_type, activation, gpu_ids)
 
 
+def load_mbu_feature_extractor(load_path):
+    state = torch.load(load_path)
+    e2.load_state_dict(state['e2'])
+
 #############################################################################################################
 # Network structure
 #############################################################################################################
@@ -190,11 +194,12 @@ class ResGenerator(nn.Module):
                 attn = Auto_Attn(ngf*mult, None)
                 setattr(self, 'attn' + str(i), attn)
 
-    def forward(self, z, f_m=None, f_e=None, mask=None):
+    def forward(self, z, f_m=None, f_f=None, f_e=None, mask=None):
         """
         ResNet Generator Network
         :param z: latent vector
         :param f_m: feature of valid regions for conditional VAG-GAN
+        :param f_f: feature of feature image
         :param f_e: previous encoder feature for short+long term attention layer
         :return results: different scale generation outputs
         """
@@ -205,7 +210,7 @@ class ResGenerator(nn.Module):
              f = generator(f)
 
         # the features come from mask regions and valid regions, we directly add them together
-        out = f_m + f
+        out = f_m + f + f_f  # TODO: consider concatenating f_f
         results= []
         attn = 0
         for i in range(self.layers):
