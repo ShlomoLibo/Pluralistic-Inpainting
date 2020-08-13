@@ -4,8 +4,8 @@ import torch
 from torch import nn
 from torch import optim
 import torchvision
-from mask_models import E1, E2, D_A, Disc, D_B
-from mask_utils import save_imgs, save_model, load_model, CustomDataset
+from .mask_models import E1, E2, D_A, Disc, D_B
+from .mask_utils import save_imgs, save_model, load_model, CustomDataset
 import argparse
 import time
 
