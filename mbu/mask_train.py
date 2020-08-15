@@ -127,6 +127,20 @@ def train(args):
             #Reconstruction
             loss = args.gama * l1(A_decoding, domA_img) + args.delta * l1(B_decoding, domB_img)
 
+            # New code starts here!!!!!!!!
+
+            domA_img_f = torch.flip(domA_img, [3])
+            A_common_f = e1(domA_img)
+            A_separate_f = e2(domA_img_f)
+            A_encoding_f = torch.cat([A_common_f, A_separate_f], dim=1)
+            A_shaved_encoding_f = torch.cat([A_common_f, B_separate], dim=1)
+            A_decoding_f, _ = d_b(A_encoding_f, d_a(A_shaved_encoding_f))
+
+            # New reconstruction loss
+            loss += args.aug_weight * l1(A_decoding_f, domA_img)
+
+            # New code ends here!!!!!!!
+
             C_encoding = torch.cat([B_common, A_separate], dim=1)
             C_decoding, _ = d_b(C_encoding, domB_img)
 
@@ -243,6 +257,7 @@ if __name__ == '__main__':
     parser.add_argument('--beta2', type=float, default=0.001)
     parser.add_argument('--gama', type=float, default=7.0)
     parser.add_argument('--delta', type=float, default=5.0)
+    parser.add_argument('--aug_weight', type=float, default=2.5)
     parser.add_argument('--gpu', type=int, default=-1)
 
     args = parser.parse_args()
