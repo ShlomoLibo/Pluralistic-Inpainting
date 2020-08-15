@@ -182,7 +182,7 @@ class Disc(nn.Module):
         net = self.classify(net)
         net = net.view(-1)
         return net
-    
+
 class Disc2(nn.Module):
     def __init__(self, sep, size):
         super(Disc2, self).__init__()
