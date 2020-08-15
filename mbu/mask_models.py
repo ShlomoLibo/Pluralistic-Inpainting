@@ -182,3 +182,22 @@ class Disc(nn.Module):
         net = self.classify(net)
         net = net.view(-1)
         return net
+    
+class Disc2(nn.Module):
+    def __init__(self, sep, size):
+        super(Disc2, self).__init__()
+        self.sep = sep
+        self.size = size
+
+        self.classify = nn.Sequential(
+            nn.Linear(128*128*3, 512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 1),
+            nn.Sigmoid()
+        )
+
+    def forward(self, net):
+        net = net.view(-1, 128*128*3)
+        net = self.classify(net)
+        net = net.view(-1)
+        return net
