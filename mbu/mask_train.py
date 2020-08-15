@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch import optim
 import torchvision
-from .mask_models import E1, E2, D_A, Disc, D_B
+from .mask_models import E1, E2, D_A, Disc, D_B, Disc2
 from .mask_utils import save_imgs, save_model, load_model, CustomDataset
 import argparse
 import time
@@ -46,6 +46,7 @@ def train(args):
     e2 = E2(args.sep, args.resize // 64)
     d_a = D_A(args.resize // 64)
     disc = Disc(args.sep, args.resize // 64)
+    disc2 = Disc2(args.sep, args.resize // 64)
     d_b = D_B(args.resize // 64)
 
     mse = nn.MSELoss()
@@ -58,6 +59,7 @@ def train(args):
         d_a = d_a.cuda()
         d_b = d_b.cuda()
         disc = disc.cuda()
+        disc2 = disc2.cuda()
         A_label = A_label.cuda()
         B_label = B_label.cuda()
         B_separate = B_separate.cuda()
@@ -70,16 +72,21 @@ def train(args):
 
     disc_params = disc.parameters()
     disc_optimizer = optim.Adam(disc_params, lr=args.disclr, betas=(0.5, 0.999))
+	
+    disc2_params = disc2.parameters()
+    disc2_optimizer = optim.Adam(disc2_params, lr=args.disclr, betas=(0.5, 0.999))
 
     if args.load != '':
         save_file = os.path.join(args.load, 'checkpoint')
-        _iter = load_model(save_file, e1, e2, d_a, ae_optimizer, disc, disc_optimizer)
+        _iter = load_model(save_file, e1, e2, d_a, d_b, ae_optimizer, disc, disc_optimizer, disc2, disc2_optimizer)
 
     e1 = e1.train()
     e2 = e2.train()
     d_a = d_a.train()
     d_b = d_b.train()
     disc = disc.train()
+    disc2 = disc2.train()
+	
 
     print('Started training...')
     while True:
@@ -141,6 +148,19 @@ def train(args):
                 preds_B = disc(B_common)
                 loss += args.discweight * (bce(preds_A, B_label) + bce(preds_B, B_label))
 
+            # New Discriminator !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if args.discweight > 0:
+                separate_A = e2(domA_img)
+                common_A = e1(domA_img)
+                A_encoding = torch.cat([common_A, separate_A], dim=1)
+                A_decoding = d_a(A_encoding)
+                BA_decoding, mask = d_b(A_encoding, domA_img)
+                mask_th = (mask > 0.1).float()
+                generated_img = A_decoding * mask_th + (1 - mask_th) * domA_img			
+                preds_A = disc2(generated_img)
+                preds_B = disc2(domB_img)
+                loss += args.discweight * (bce(preds_A, B_label) + bce(preds_B, B_label))
+
             loss.backward()
             torch.nn.utils.clip_grad_norm_(ae_params, 5)
             ae_optimizer.step()
@@ -158,6 +178,24 @@ def train(args):
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(disc_params, 5)
                 disc_optimizer.step()
+				
+            # New Discriminato1r !!!!!!!!!!!!!!!!!!!!!!!!!
+            if args.discweight > 0:
+                disc2_optimizer.zero_grad()
+                separate_A = e2(domA_img)
+                common_A = e1(domA_img)
+                A_encoding = torch.cat([common_A, separate_A], dim=1)
+                A_decoding = d_a(A_encoding)
+                BA_decoding, mask = d_b(A_encoding, domA_img)
+                mask_th = (mask > 0.1).float()
+                generated_img = A_decoding * mask_th + (1 - mask_th) * domA_img
+                disc_A = disc2(generated_img)
+                disc_B = disc2(domB_img)
+                loss = bce(disc_A, A_label) + bce(disc_B, B_label)
+
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(disc2_params, 5)
+                disc2_optimizer.step()
 
             if _iter % args.progress_iter == 0:
                 print('Outfile: %s <<>> Iteration %d' % (args.out, _iter))
@@ -178,7 +216,7 @@ def train(args):
 
             if _iter % args.save_iter == 0 and _iter > 0:
                 save_file = os.path.join(args.out, 'checkpoint')
-                save_model(save_file, e1, e2, d_a, d_b, ae_optimizer, disc, disc_optimizer, _iter)
+                save_model(save_file, e1, e2, d_a, d_b, ae_optimizer, disc, disc_optimizer, disc2, disc2_optimizer, _iter)
 
             _iter += 1
 
