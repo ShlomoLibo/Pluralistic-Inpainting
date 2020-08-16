@@ -33,7 +33,7 @@ def define_d(input_nc=3, ndf=64, img_f=512, layers=6, norm='none', activation='L
     return init_net(net, init_type, activation, gpu_ids)
 
 
-def load_mbu_feature_extractor(load_path):
+def load_mbu_feature_extractor(load_path, e2):
     state = torch.load(load_path)
     e2.load_state_dict(state['e2'])
 
@@ -59,6 +59,9 @@ class ResEncoder(nn.Module):
         self.layers = layers
         self.z_nc = z_nc
         self.L = L
+        self.layers = layers
+        self.ngf = ngf
+        self.img_f = img_f
 
         norm_layer = get_norm_layer(norm_type=norm)
         nonlinearity = get_nonlinearity_layer(activation_type=activation)
@@ -79,6 +82,9 @@ class ResEncoder(nn.Module):
 
         self.posterior = ResBlock(ngf * mult, 2*z_nc, ngf * mult, norm_layer, nonlinearity, 'none', use_spect, use_coord)
         self.prior = ResBlock(ngf * mult, 2*z_nc, ngf * mult, norm_layer, nonlinearity, 'none', use_spect, use_coord)
+
+    def get_out_channels(self):
+        return self.ngf * min(2 ** self.layers, self.img_f // self.ngf)
 
     def forward(self, img_m, img_c=None):
         """
@@ -209,8 +215,10 @@ class ResGenerator(nn.Module):
              generator = getattr(self, 'generator' + str(i))
              f = generator(f)
 
-        # the features come from mask regions and valid regions, we directly add them together
-        out = f_m + f + f_f  # TODO: consider concatenating f_f
+        # the features come from mask regions and valid regions, we directly add them together.
+        # Then we concatenate with feature image features
+        out = torch.cat(f_m + f, f_f)
+
         results= []
         attn = 0
         for i in range(self.layers):

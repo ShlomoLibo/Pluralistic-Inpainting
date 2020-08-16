@@ -3,6 +3,7 @@ from .base_model import BaseModel
 from . import network, base_function, external_function
 from util import task
 import itertools
+import mbu
 
 
 class Pluralistic(BaseModel):
@@ -26,7 +27,7 @@ class Pluralistic(BaseModel):
         """Initial the pluralistic model"""
         BaseModel.__init__(self, opt)
 
-        self.loss_names = ['kl_rec', 'kl_g', 'app_rec', 'app_g', 'ad_g', 'img_d', 'ad_rec', 'img_d_rec']
+        self.loss_names = ['kl_rec', 'kl_g', 'app_rec', 'app_g', 'ad_g', 'img_d', 'ad_rec', 'img_d_rec', 'feature_rec', 'feature_g']
         self.visual_names = ['img_m', 'img_c', 'img_f', 'img_truth', 'img_feature', 'img_out', 'img_g', 'img_rec']
         self.value_names = ['u_m', 'sigma_m', 'u_post', 'sigma_post', 'u_prior', 'sigma_prior']
         self.model_names = ['E', 'G', 'D', 'F', 'D_rec']
@@ -39,13 +40,14 @@ class Pluralistic(BaseModel):
         # define the inpainting model
         self.net_E = network.define_e(ngf=32, z_nc=128, img_f=128, layers=5, norm='none', activation='LeakyReLU',
                                       init_type='orthogonal', gpu_ids=opt.gpu_ids)
-        self.net_G = network.define_g(ngf=32, z_nc=128, img_f=128, L=0, layers=5, output_scale=opt.output_scale,
+        self.net_G = network.define_g(ngf=32 + self.net_F.get_out_channels(), z_nc=128, img_f=128, L=0, layers=5, output_scale=opt.output_scale,
                                       norm='instance', activation='LeakyReLU', init_type='orthogonal', gpu_ids=opt.gpu_ids)
         # define the discriminator model
         self.net_D = network.define_d(ndf=32, img_f=128, layers=5, model_type='ResDis', init_type='orthogonal', gpu_ids=opt.gpu_ids)
         self.net_D_rec = network.define_d(ndf=32, img_f=128, layers=5, model_type='ResDis', init_type='orthogonal', gpu_ids=opt.gpu_ids)
 
-        self.mbu_feature_extractor = network.load_mbu_feature_extractor(opt.mbu_feature_extractor)
+        self.mbu_feature_extractor = mbu.mask_models.E2(25, 2)  # 25,2  is the default configuration for the e2 network
+        network.load_mbu_feature_extractor(opt.mbu_feature_extractor, self.mbu_feature_extractor)
 
         if self.isTrain:
             # define the loss functions
@@ -217,6 +219,13 @@ class Pluralistic(BaseModel):
                 loss_app_g += self.L1loss(img_fake_i, img_real_i)
             elif self.opt.train_paths == "two":
                 loss_app_g += self.L1loss(img_fake_i*mask_i, img_real_i*mask_i)
+
+        # feature is currently available only at a 128x128 resolution. TODO: train feature extractor for all scales
+        loss_feature_rec = self.L1loss(self.mbu_feature_extractor(self.scale_img[-1]),
+                                       self.img_rec[-1])
+        loss_feature_g = self.L1loss(self.mbu_feature_extractor(self.img_feature[-1]),
+                                       self.img_g[-1])
+
         self.loss_app_rec = loss_app_rec * self.opt.lambda_rec
         self.loss_app_g = loss_app_g * self.opt.lambda_rec
 
