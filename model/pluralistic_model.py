@@ -34,7 +34,7 @@ class Pluralistic(BaseModel):
         self.distribution = []
 
         # define feature extractor model
-        self.net_F = network.define_e(ngf=32, z_nc=128, img_f=128, layers=0, norm='none', activation='LeakyReLU',
+        self.net_F = network.define_e(ngf=32, z_nc=128, img_f=128, layers=5, L=0, norm='none', activation='LeakyReLU',
                                       init_type='orthogonal', gpu_ids=opt.gpu_ids)
 
         # define the inpainting model
