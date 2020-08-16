@@ -83,9 +83,6 @@ class ResEncoder(nn.Module):
         self.posterior = ResBlock(ngf * mult, 2*z_nc, ngf * mult, norm_layer, nonlinearity, 'none', use_spect, use_coord)
         self.prior = ResBlock(ngf * mult, 2*z_nc, ngf * mult, norm_layer, nonlinearity, 'none', use_spect, use_coord)
 
-    def get_out_channels(self):
-        return self.ngf * min(2 ** self.layers, self.img_f // self.ngf)
-
     def forward(self, img_m, img_c=None):
         """
         :param img_m: image with mask regions I_m
