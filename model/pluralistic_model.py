@@ -3,7 +3,7 @@ from .base_model import BaseModel
 from . import network, base_function, external_function
 from util import task
 import itertools
-import mbu
+import mbu.mask_models
 
 
 class Pluralistic(BaseModel):
@@ -70,12 +70,12 @@ class Pluralistic(BaseModel):
         self.input = input
         self.image_paths = self.input['img_path']
         self.img = input['img']
-        self.img = input['img_feature']
+        self.img_feature = input['img_feature']
         self.mask = input['mask']
 
         if len(self.gpu_ids) > 0:
             self.img = self.img.cuda(self.gpu_ids[0],)
-            self.img_feature = self.img.cuda(self.gpu_ids[0],)
+            self.img_feature = self.img_feature.cuda(self.gpu_ids[0],)
             self.mask = self.mask.cuda(self.gpu_ids[0],)
 
         # get I_m and I_c for image with mask and complement regions for training

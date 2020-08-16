@@ -22,8 +22,8 @@ class CreateDataset(data.Dataset):
         # load mask
         mask = self.load_mask(img, index)
         # load feature image
-        img_feature = self.load_img_feature(index)
-        return {'img': img, 'img_path': img_path, 'mask': mask, 'img_feature': img_feature}
+        img_feature, img_feature_path = self.load_img_feature(index)
+        return {'img': img, 'img_path': img_path, 'mask': mask, 'img_feature': img_feature, 'img_feature_path': img_feature_path}
 
     def __len__(self):
         return self.img_size
