@@ -41,7 +41,7 @@ class CreateDataset(data.Dataset):
 
     def load_img_feature(self, index):
         ImageFile.LOAD_TRUNCATED_IMAGES = True
-        img_feature_path = self.img_paths[index % self.img_feature_size]
+        img_feature_path = self.img_feature_paths[index % self.img_feature_size]
         img_feature_pil = Image.open(img_feature_path).convert('RGB')
         img_feature = self.transform(img_feature_pil)
         img_feature_pil.close()
