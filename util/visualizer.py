@@ -125,13 +125,14 @@ class Visualizer():
 
     # statistics distribution: draw data histogram
     def plot_current_distribution(self, distribution):
-        name = list(distribution.keys())
-        value = np.array(list(distribution.values())).swapaxes(1, 0)
-        self.vis.boxplot(
-            X=value,
-            opts=dict(legend=name),
-            win=self.display_id+30
-        )
+        if self.display_id > 0:
+            name = list(distribution.keys())
+            value = np.array(list(distribution.values())).swapaxes(1, 0)
+            self.vis.boxplot(
+                X=value,
+                opts=dict(legend=name),
+                win=self.display_id+30
+            )
 
     # errors: same format as |errors| of plotCurrentErrors
     def print_current_errors(self, epoch, i, errors, t):
