@@ -215,12 +215,13 @@ class ResGenerator(nn.Module):
 
         # the features come from mask regions and valid regions, we directly add them together.
         # Then we concatenate with feature image features
-        out = torch.cat((f_m + f, f_f))
+        out = torch.cat((f_m + f, f_f), dim=1)
 
         results= []
         attn = 0
         for i in range(self.layers):
             model = getattr(self, 'decoder' + str(i))
+
             out = model(out)
             if i == 1 and self.use_attn:
                 # auto attention

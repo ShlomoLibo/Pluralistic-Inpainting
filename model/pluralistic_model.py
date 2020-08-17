@@ -49,6 +49,11 @@ class Pluralistic(BaseModel):
         self.mbu_feature_extractor = mbu.mask_models.E2(25, 2)  # 25,2  is the default configuration for the e2 network
         network.load_mbu_feature_extractor(opt.mbu_feature_extractor, self.mbu_feature_extractor)
 
+        for param in self.mbu_feature_extractor.parameters():
+            param.requires_grad = False
+
+        self.mbu_feature_extractor.cuda()
+
         if self.isTrain:
             # define the loss functions
             self.GANloss = external_function.GANLoss(opt.gan_mode)
@@ -221,10 +226,10 @@ class Pluralistic(BaseModel):
                 loss_app_g += self.L1loss(img_fake_i*mask_i, img_real_i*mask_i)
 
         # feature is currently available only at a 128x128 resolution. TODO: train feature extractor for all scales
-        loss_feature_rec = self.L1loss(self.mbu_feature_extractor(self.scale_img[-1]),
-                                       self.img_rec[-1])
-        loss_feature_g = self.L1loss(self.mbu_feature_extractor(self.img_feature[-1]),
-                                       self.img_g[-1])
+        self.loss_feature_rec = self.L1loss(self.mbu_feature_extractor(self.scale_img[-1]),
+                                            self.mbu_feature_extractor(self.img_rec[-1]))
+        self.loss_feature_g = self.L1loss(self.mbu_feature_extractor(self.img_feature),
+                                          self.mbu_feature_extractor(self.img_g[-1]))
 
         self.loss_app_rec = loss_app_rec * self.opt.lambda_rec
         self.loss_app_g = loss_app_g * self.opt.lambda_rec
