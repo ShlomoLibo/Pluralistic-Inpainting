@@ -170,7 +170,8 @@ class ResGenerator(nn.Module):
         nonlinearity = get_nonlinearity_layer(activation_type=activation)
         # latent z to feature
         mult = min(2 ** (layers-1), img_f // ngf)
-        self.generator = ResBlock(z_nc, ngf * mult, ngf * mult, None, nonlinearity, 'none', use_spect, use_coord)
+        # self.generator = ResBlock(z_nc, ngf * mult, ngf * mult, None, nonlinearity, 'none', use_spect, use_coord)
+        self.generator = ResBlock(z_nc, ngf * 4, ngf * 4, None, nonlinearity, 'none', use_spect, use_coord) # quickfix
 
         # transform
         for i in range(self.L):
@@ -214,7 +215,7 @@ class ResGenerator(nn.Module):
 
         # the features come from mask regions and valid regions, we directly add them together.
         # Then we concatenate with feature image features
-        out = torch.cat(f_m + f, f_f)
+        out = torch.cat((f_m + f, f_f))
 
         results= []
         attn = 0
