@@ -28,7 +28,7 @@ class Pluralistic(BaseModel):
         BaseModel.__init__(self, opt)
 
         self.loss_names = ['kl_rec', 'kl_g', 'app_rec', 'app_g', 'ad_g', 'img_d', 'ad_rec', 'img_d_rec', 'feature_rec', 'feature_g']
-        self.visual_names = ['img_m', 'img_c', 'img_f', 'img_truth', 'img_feature', 'img_out', 'img_g', 'img_rec']
+        self.visual_names = ['img_m', 'img_c', 'img_f', 'img_truth', 'img_out', 'img_g', 'img_rec']
         self.value_names = ['u_m', 'sigma_m', 'u_post', 'sigma_post', 'u_prior', 'sigma_prior']
         self.model_names = ['E', 'G', 'D', 'F', 'D_rec']
         self.distribution = []
@@ -228,7 +228,7 @@ class Pluralistic(BaseModel):
         # feature is currently available only at a 128x128 resolution. TODO: train feature extractor for all scales
         self.loss_feature_rec = self.L1loss(self.mbu_feature_extractor(self.scale_img[-1]),
                                             self.mbu_feature_extractor(self.img_rec[-1]))
-        self.loss_feature_g = self.L1loss(self.mbu_feature_extractor(self.img_feature),
+        self.loss_feature_g = self.L1loss(self.mbu_feature_extractor(self.img_f),
                                           self.mbu_feature_extractor(self.img_g[-1]))
 
         self.loss_app_rec = loss_app_rec * self.opt.lambda_rec
