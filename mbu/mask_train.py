@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch import optim
 import torchvision
-from .mask_models import E1, E2, D_A, Disc, D_B, Disc2
+from .mask_models import E1, E2, D_A, Disc, D_B, Disc2, Disc3
 from .mask_utils import save_imgs, save_model, load_model, CustomDataset
 import argparse
 import time
@@ -47,6 +47,7 @@ def train(args):
     d_a = D_A(args.resize // 64)
     disc = Disc(args.sep, args.resize // 64)
     disc2 = Disc2(args.sep, args.resize // 64)
+    disc3 = Disc3(args.sep, args.resize // 64)
     d_b = D_B(args.resize // 64)
 
     mse = nn.MSELoss()
@@ -60,6 +61,7 @@ def train(args):
         d_b = d_b.cuda()
         disc = disc.cuda()
         disc2 = disc2.cuda()
+        disc3 = disc3.cuda()
         A_label = A_label.cuda()
         B_label = B_label.cuda()
         B_separate = B_separate.cuda()
@@ -75,10 +77,13 @@ def train(args):
 	
     disc2_params = disc2.parameters()
     disc2_optimizer = optim.Adam(disc2_params, lr=args.disclr, betas=(0.5, 0.999))
+	
+    disc3_params = disc3.parameters()
+    disc3_optimizer = optim.Adam(disc3_params, lr=args.disclr, betas=(0.5, 0.999))
 
     if args.load != '':
         save_file = os.path.join(args.load, 'checkpoint')
-        _iter = load_model(save_file, e1, e2, d_a, d_b, ae_optimizer, disc, disc_optimizer, disc2, disc2_optimizer)
+        _iter = load_model(save_file, e1, e2, d_a, d_b, ae_optimizer, disc, disc_optimizer, disc2, disc2_optimizer, disc3, disc3_optimizer)
 
     e1 = e1.train()
     e2 = e2.train()
@@ -86,6 +91,7 @@ def train(args):
     d_b = d_b.train()
     disc = disc.train()
     disc2 = disc2.train()
+    disc3 = disc3.train()
 	
 
     print('Started training...')
@@ -174,6 +180,19 @@ def train(args):
                 preds_A = disc2(generated_img)
                 preds_B = disc2(domB_img)
                 loss += args.discweight * (bce(preds_A, B_label) + bce(preds_B, B_label))
+		
+            # New Discriminator2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            #compare real glasses to transfered glasses
+            if args.discweight > 0:
+                separate_A = e2(domA_img)
+                common_B = e1(domB_img)
+                BA_encoding = torch.cat([common_B, separate_A], dim=1)       
+                BA_decoding, mask = d_b(BA_encoding, domB_img)
+                mask_th = (mask > 0.1).float()
+                generated_img = BA_decoding * mask_th + (1 - mask_th) * domB_img			
+                generated_A = disc3(generated_img)
+                orig_A = disc3(domA_img)
+                loss += args.discweight * (bce(orig_A, A_label) + bce(generated_A, A_label))
 
             loss.backward()
             torch.nn.utils.clip_grad_norm_(ae_params, 5)
@@ -210,6 +229,24 @@ def train(args):
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(disc2_params, 5)
                 disc2_optimizer.step()
+		
+	    # New Discriminator2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	    #compare real glasses to transfered glasses
+            if args.discweight > 0:
+                disc3_optimizer.zero_grad()
+                separate_A = e2(domA_img)
+                common_B = e1(domB_img)
+                BA_encoding = torch.cat([common_B, separate_A], dim=1)       
+                BA_decoding, mask = d_b(BA_encoding, domB_img)
+                mask_th = (mask > 0.1).float()
+                generated_img = BA_decoding * mask_th + (1 - mask_th) * domB_img			
+                generated_A = disc3(generated_img)
+                orig_A = disc3(domA_img)
+                loss = bce(generated_A, B_label)+bce(orig_A, A_label)
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(disc3_params, 5)
+                disc3_optimizer.step()
+
 
             if _iter % args.progress_iter == 0:
                 print('Outfile: %s <<>> Iteration %d' % (args.out, _iter))
