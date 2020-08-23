@@ -60,7 +60,9 @@ class Pluralistic(BaseModel):
             self.L2loss = torch.nn.MSELoss()
             # define the optimizer
             self.optimizer_G = torch.optim.Adam(itertools.chain(filter(lambda p: p.requires_grad, self.net_G.parameters()),
-                        filter(lambda p: p.requires_grad, self.net_E.parameters())), lr=opt.lr, betas=(0.0, 0.999))
+                                                                filter(lambda p: p.requires_grad, self.net_E.parameters()),
+                                                                filter(lambda p: p.requires_grad, self.net_F.parameters())),
+                                                lr=opt.lr, betas=(0.0, 0.999))
             self.optimizer_D = torch.optim.Adam(itertools.chain(filter(lambda p: p.requires_grad, self.net_D.parameters()),
                                                 filter(lambda p: p.requires_grad, self.net_D_rec.parameters())),
                                                 lr=opt.lr, betas=(0.0, 0.999))
