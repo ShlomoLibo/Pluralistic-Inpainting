@@ -11,6 +11,8 @@ class BaseOptions():
         self.initialized = False
 
     def initialize(self, parser):
+        parser.add_argument('--train_paths', type=str, default='two',
+                            help='training strategies with one path or two paths')
         # base define
         parser.add_argument('--name', type=str, default='experiment_name', help='name of the experiment.')
         parser.add_argument('--model', type=str, default='pluralistic', help='name of the model type. [pluralistic]')

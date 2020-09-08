@@ -16,7 +16,6 @@ class Pluralistic(BaseModel):
         """Add new options and rewrite default values for existing options"""
         parser.add_argument('--output_scale', type=int, default=4, help='# of number of the output scale')
         if is_train:
-            parser.add_argument('--train_paths', type=str, default='two', help='training strategies with one path or two paths')
             parser.add_argument('--lambda_rec', type=float, default=20.0, help='weight for image reconstruction loss')
             parser.add_argument('--lambda_kl', type=float, default=20.0, help='weight for kl divergence loss')
             parser.add_argument('--lambda_g', type=float, default=1.0, help='weight for generation loss')
@@ -46,14 +45,14 @@ class Pluralistic(BaseModel):
         self.net_D = network.define_d(ndf=32, img_f=256, layers=5, model_type='ResDis', init_type='orthogonal', gpu_ids=opt.gpu_ids)
         self.net_D_rec = network.define_d(ndf=32, img_f=256, layers=5, model_type='ResDis', init_type='orthogonal', gpu_ids=opt.gpu_ids)
 
-        self.mbu_feature_extractor = mbu.mask_models.E2(25, 2)  # 25,2  is the default configuration for the e2 network
-        network.load_mbu_feature_extractor(opt.mbu_feature_extractor, self.mbu_feature_extractor)
-
-        base_function._freeze(self.mbu_feature_extractor)
-
-        self.mbu_feature_extractor.cuda()
-
         if self.isTrain:
+            self.mbu_feature_extractor = mbu.mask_models.E2(25,
+                                                            2)  # 25,2  is the default configuration for the e2 network
+            network.load_mbu_feature_extractor(opt.mbu_feature_extractor, self.mbu_feature_extractor)
+
+            base_function._freeze(self.mbu_feature_extractor)
+
+            self.mbu_feature_extractor.cuda()
             # define the loss functions
             self.GANloss = external_function.GANLoss(opt.gan_mode)
             self.L1loss = torch.nn.L1Loss()
@@ -228,9 +227,9 @@ class Pluralistic(BaseModel):
 
         # feature is currently available only at a 128x128 resolution. TODO: train feature extractor for all scales
         self.loss_feature_rec = self.L2loss(self.mbu_feature_extractor(self.scale_img[-1]),
-                                            self.mbu_feature_extractor(self.img_rec[-1])) * 2
+                                            self.mbu_feature_extractor(self.img_rec[-1]))
         self.loss_feature_g = self.L2loss(self.mbu_feature_extractor(self.img_f),
-                                          self.mbu_feature_extractor(self.img_g[-1])) * 2
+                                          self.mbu_feature_extractor(self.img_g[-1]))
 
         self.loss_app_rec = loss_app_rec * self.opt.lambda_rec
         self.loss_app_g = loss_app_g * self.opt.lambda_rec
