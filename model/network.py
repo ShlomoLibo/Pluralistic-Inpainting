@@ -34,7 +34,7 @@ def define_d(input_nc=3, ndf=64, img_f=512, layers=6, norm='none', activation='L
 
 
 def load_mbu_feature_extractor(load_path, e2):
-    state = torch.load(load_path)
+    state = torch.load(load_path, map_location="cuda:0")
     e2.load_state_dict(state['e2'])
 
 #############################################################################################################
