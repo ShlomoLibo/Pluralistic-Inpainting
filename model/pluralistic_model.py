@@ -228,9 +228,9 @@ class Pluralistic(BaseModel):
 
         # feature is currently available only at a 128x128 resolution. TODO: train feature extractor for all scales
         self.loss_feature_rec = self.L2loss(self.mbu_feature_extractor(self.scale_img[-1]),
-                                            self.mbu_feature_extractor(self.img_rec[-1])) * 100
+                                            self.mbu_feature_extractor(self.img_rec[-1])) * 2
         self.loss_feature_g = self.L2loss(self.mbu_feature_extractor(self.img_f),
-                                          self.mbu_feature_extractor(self.img_g[-1])) * 500
+                                          self.mbu_feature_extractor(self.img_g[-1])) * 2
 
         self.loss_app_rec = loss_app_rec * self.opt.lambda_rec
         self.loss_app_g = loss_app_g * self.opt.lambda_rec
