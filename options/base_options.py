@@ -14,7 +14,7 @@ class BaseOptions():
         # base define
         parser.add_argument('--name', type=str, default='experiment_name', help='name of the experiment.')
         parser.add_argument('--model', type=str, default='pluralistic', help='name of the model type. [pluralistic]')
-        parser.add_argument('--mask_type', type=int, default=[0],
+        parser.add_argument('--mask_type', type=int, default=3,
                             help='mask type, 0: center mask, 1:random regular mask, '
                             '2: random irregular mask. 3: external irregular mask. [0],[1,2],[1,2,3]')
         parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints', help='models are save here')
@@ -22,8 +22,7 @@ class BaseOptions():
         parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0, 1, 2 use -1 for CPU')
 
         # data pattern define
-        parser.add_argument('--img_file', type=str, default='/data/dataset/train', help='training and testing dataset (images)')
-        parser.add_argument('--img_feature_file', type=str, default='/data/dataset/train_feature', help='training and testing dataset (features)')
+        parser.add_argument('--img_file', type=str, default='/data/dataset/train', help='training and testing dataset')
         parser.add_argument('--mask_file', type=str, default='none', help='load test mask')
         parser.add_argument('--loadSize', type=int, default=[266, 266], help='scale images to this size')
         parser.add_argument('--fineSize', type=int, default=[256, 256], help='then crop to this size')
