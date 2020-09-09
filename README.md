@@ -10,7 +10,7 @@ Given two images, one of the person who we want to try the glasses on ('original
 3.	Transfer new glasses from a feature image to the image generated in step 2. 
 <br>
 Our work utilizes previous research and is based on two earlier articles:
-<br>
+
 [The first](https://github.com/rmokady/mbu-content-tansfer), presents a network that is used for image-to-image translation between two domains, where one contains additional information, for example glasses, in an unsupervised way.
 <br>
 [The second](https://github.com/lyndonzheng/Pluralistic-Inpainting), presents an approach for pluralistic image completion, generating multiple plausible solutions for image completion. 
