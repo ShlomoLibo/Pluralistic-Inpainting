@@ -16,9 +16,6 @@ class TrainOptions(BaseOptions):
         parser.add_argument('--lr', type=float, default=1e-4, help='initial learning rate for adam')
         parser.add_argument('--gan_mode', type=str, default='lsgan', choices=['wgan-gp', 'hinge', 'lsgan'])
 
-        # feature extractor path
-        parser.add_argument('--mbu_feature_extractor', type=str, help="the E_s feature extractor path from the mbu-content-transfer paper")
-
         # display the results
         parser.add_argument('--display_freq', type=int, default=100, help='frequency of showing training results on screen')
         parser.add_argument('--print_freq', type=int, default=100, help='frequency of showing training results on console')
