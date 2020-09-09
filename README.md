@@ -4,6 +4,7 @@
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
 This repository holds an implemantation for a system used for this task. 
 <br>
+<br>
 Given two images, one of the person who we want to try the glasses on ('original image'), and one of the desired glasses (feature image'), we perform the following:
 1.	Generate a segmentation mask for the glasses in the original image.
 2.	Generate an image with no glasses with the [pluralistic image completion](https://github.com/lyndonzheng/Pluralistic-Inpainting) network while using the mask from the previous step.
