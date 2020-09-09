@@ -45,7 +45,7 @@ Download the pre-trained models using the following links: and put it under ```P
 ## Evaluation
 For evaluating the model run:
 ```
-python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./checkpoints/celeba_random --img_file out/original_images -mask_file out/exps_masks --load_mask ./
+python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./checkpoints/celeba_random --img_file out/original_images --mask_file out/exps_masks --load_mask ./
 ```
 Where:
 --load_transfer argument is the directory in which the content transfer model named "checkpoint" is saved.
