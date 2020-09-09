@@ -4,7 +4,7 @@
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
 This repository holds an implemantation for a system used for this task. 
 <br>
-Our work utilizez previous research and is based on two earlier articles. 
+Our work utilizez previous research and is based on two earlier articles:
 <br>
 [The first](https://github.com/rmokady/mbu-content-tansfer), presents a network that is used for image-to-image translation between two domains, where one contains additional information, for example glasses, in an unsupervised way.
 <br>
@@ -40,9 +40,8 @@ The input images are listed in Pluralistic_Inpainting/mbu/glasses_data in testA 
 ## Pretrained Models
 Download the pre-trained models using the following links: and put it under ```Pluralistic-Inpainting/``` directory.
 <br>
-- [segmentation and content transfer model](https://drive.google.com/file/d/1dbJdtpNCDxSXJrNaUVc4IQnsCfyKoySO/view): Save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
-<br>
-- [image completion model](https://drive.google.com/drive/folders/1zQnFkRAtjGCorOd0Mj9tfdApcAPbs6Kw): Save the files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```
+- [Segmentation and content transfer model](https://drive.google.com/file/d/1dbJdtpNCDxSXJrNaUVc4IQnsCfyKoySO/view): save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
+- [Image completion model](https://drive.google.com/drive/folders/1zQnFkRAtjGCorOd0Mj9tfdApcAPbs6Kw): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```.
 
 ## Training
 For training the model used for segmentation and content transfer, run from mbu/ directory the following command:
