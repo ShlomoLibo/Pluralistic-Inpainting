@@ -163,7 +163,7 @@ def get_test_imgs(args):
     return domA_img, domB_img
 
 
-def save_model(out_file, e1, e2, d_a, d_b, ae_opt, disc, disc_opt, disc2, disc2_opt, disc3, disc3_opt, iters):
+def save_model(out_file, e1, e2, d_a, d_b, ae_opt, disc, disc_opt, disc2, disc2_opt, iters):
     state = {
         'e1': e1.state_dict(),
         'e2': e2.state_dict(),
@@ -174,15 +174,13 @@ def save_model(out_file, e1, e2, d_a, d_b, ae_opt, disc, disc_opt, disc2, disc2_
         'disc_opt': disc_opt.state_dict(),
         'disc2': disc2.state_dict(),
         'disc2_opt': disc2_opt.state_dict(),
-        'disc3': disc3.state_dict(),
-        'disc3_opt': disc3_opt.state_dict(),
         'iters': iters
     }
     torch.save(state, out_file)
     return
 
 
-def load_model(load_path, e1, e2, d_a, d_b, ae_opt, disc, disc_opt, disc2, disc2_opt, disc3, disc3_opt):
+def load_model(load_path, e1, e2, d_a, d_b, ae_opt, disc, disc_opt, disc2, disc2_opt):
     state = torch.load(load_path)
     e1.load_state_dict(state['e1'])
     e2.load_state_dict(state['e2'])
@@ -193,8 +191,6 @@ def load_model(load_path, e1, e2, d_a, d_b, ae_opt, disc, disc_opt, disc2, disc2
     disc_opt.load_state_dict(state['disc_opt'])
     disc2.load_state_dict(state['disc2'])
     disc2_opt.load_state_dict(state['disc2_opt'])
-    disc3.load_state_dict(state['disc3'])
-    disc3_opt.load_state_dict(state['disc3_opt'])
     return state['iters']
 
 
