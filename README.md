@@ -2,7 +2,7 @@
 # Virtual Glasses Try-On
 
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
-<br> <b> This repository contains 3 branches. The "pipeline" branch and the "master" branch represent two different approches. </b>
+<br> <b> This repository contains 3 branches. The "pipeline" branch and the "master" branch represent two different approches, where in each we explore a different way of levereging image completion for virtual glasses try-on. </b>
 <br>
 <br>
 Given two images, one of the person who we want to try the glasses on ('original image'), and one of the desired glasses ('feature image'), we perform the following:
