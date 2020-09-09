@@ -45,11 +45,13 @@ Download the pre-trained models using the following links: and put it under ```P
 ## Evaluation
 For evaluating the model run:
 ```
-python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./checkpoints/celeba_random --img_file out/original_images --mask_file out/exp_masks --mask_type 3 --load_mask ./
+python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./celeba_random --img_file out/original_images --mask_file out/exp_masks --mask_type 3 --load_mask ./
 ```
 Where:
 --load_transfer argument is the directory in which the content transfer model named "checkpoint" is saved.
+<br>
 --name argument is the directory in which the image completion model is saved.
+<br>
 --load_transfer argument is the directory in which the model that is used for segmentation and named "checkpoint" is saved.
 
 The evaluation results will be saved at Pluralistic-Inpainting/out.
