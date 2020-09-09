@@ -40,7 +40,7 @@ python preprocess.py --root ./img_align_celeba --attributes ./list_attr_celeba.t
 Download the pre-trained models using the following links: and put it under ```Pluralistic-Inpainting/``` directory.
 <br>
 - [Segmentation and content transfer model](https://drive.google.com/file/d/1oz32kB_91te4kEj8uuva9CwJPULtorep/view?usp=sharing): save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
-- [Image completion model](https://drive.google.com/drive/folders/1zQnFkRAtjGCorOd0Mj9tfdApcAPbs6Kw): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```.
+- [Image completion model](https://drive.google.com/drive/folders/1giwKIj6kpTUv393-WN83_IUCyG2ingMD?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```.
 
 ## Evaluation
 For evaluating the model run:
