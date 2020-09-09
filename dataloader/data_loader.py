@@ -38,6 +38,8 @@ class CreateDataset(data.Dataset):
 
     def load_mask(self, img, index):
         """Load different mask types for training and testing"""
+        # mask_type_index = random.randint(0, len(self.opt.mask_type) - 1)
+        # mask_type = self.opt.mask_type[mask_type_index]
         mask_type = 3
         # center mask
         if mask_type == 0:
@@ -61,6 +63,12 @@ class CreateDataset(data.Dataset):
             size = mask_pil.size[0]
             if size > mask_pil.size[1]:
                 size = mask_pil.size[1]
+            #mask_transform = transforms.Compose([transforms.RandomHorizontalFlip(),
+            #                                     transforms.RandomRotation(10),
+            #                                     transforms.CenterCrop([size, size]),
+            #                                     transforms.Resize(self.opt.fineSize),
+            #                                     transforms.ToTensor()
+            #                                     ])
             mask_transform = transforms.Compose([transforms.Resize(self.opt.fineSize),
                                                  transforms.ToTensor()
                                                  ])
