@@ -27,14 +27,10 @@ class Pluralistic(BaseModel):
         BaseModel.__init__(self, opt)
 
         self.loss_names = ['kl_rec', 'kl_g', 'app_rec', 'app_g', 'ad_g', 'img_d', 'ad_rec', 'img_d_rec']
-        self.visual_names = ['img_m', 'img_c', 'img_f', 'img_truth', 'img_feature', 'img_out', 'img_g', 'img_rec']
+        self.visual_names = ['img_m', 'img_c', 'img_truth', 'img_out', 'img_g', 'img_rec']
         self.value_names = ['u_m', 'sigma_m', 'u_post', 'sigma_post', 'u_prior', 'sigma_prior']
-        self.model_names = ['E', 'G', 'D', 'F', 'D_rec']
+        self.model_names = ['E', 'G', 'D', 'D_rec']
         self.distribution = []
-
-        # define feature extractor model
-        self.net_F = network.define_e(ngf=32, z_nc=128, img_f=128, layers=0, norm='none', activation='LeakyReLU',
-                                      init_type='orthogonal', gpu_ids=opt.gpu_ids)
 
         # define the inpainting model
         self.net_E = network.define_e(ngf=32, z_nc=128, img_f=128, layers=5, norm='none', activation='LeakyReLU',
@@ -44,8 +40,6 @@ class Pluralistic(BaseModel):
         # define the discriminator model
         self.net_D = network.define_d(ndf=32, img_f=128, layers=5, model_type='ResDis', init_type='orthogonal', gpu_ids=opt.gpu_ids)
         self.net_D_rec = network.define_d(ndf=32, img_f=128, layers=5, model_type='ResDis', init_type='orthogonal', gpu_ids=opt.gpu_ids)
-
-        self.mbu_feature_extractor = network.load_mbu_feature_extractor(opt.mbu_feature_extractor)
 
         if self.isTrain:
             # define the loss functions
@@ -68,21 +62,16 @@ class Pluralistic(BaseModel):
         self.input = input
         self.image_paths = self.input['img_path']
         self.img = input['img']
-        self.img = input['img_feature']
         self.mask = input['mask']
 
         if len(self.gpu_ids) > 0:
-            self.img = self.img.cuda(self.gpu_ids[0],)
-            self.img_feature = self.img.cuda(self.gpu_ids[0],)
-            self.mask = self.mask.cuda(self.gpu_ids[0],)
+            self.img = self.img.cuda(self.gpu_ids[0], async=True)
+            self.mask = self.mask.cuda(self.gpu_ids[0], async=True)
 
         # get I_m and I_c for image with mask and complement regions for training
         self.img_truth = self.img * 2 - 1
         self.img_m = self.mask * self.img_truth
         self.img_c = (1 - self.mask) * self.img_truth
-
-        # set feature image
-        self.img_f = self.img_feature * 2 - 1
 
         # get multiple scales image ground truth and mask for training
         self.scale_img = task.scale_pyramid(self.img_truth, self.opt.output_scale)
@@ -100,7 +89,8 @@ class Pluralistic(BaseModel):
         scale_mask = task.scale_img(self.mask, size=[f[2].size(2), f[2].size(3)])
 
         # decoder process
-        for i in range(self.opt.nsampling):
+        #for i in range(self.opt.nsampling):
+        for i in range(1):
             z = q_distribution.sample()
             self.img_g, attn = self.net_G(z, f_m=f[-1], f_e=f[2], mask=scale_mask.chunk(3, dim=1)[0])
             self.img_out = (1 - self.mask) * self.img_g[-1].detach() + self.mask * self.img_m
@@ -135,29 +125,26 @@ class Pluralistic(BaseModel):
 
         return p_distribution, q_distribution, kl_rec, kl_g
 
-    def get_G_inputs(self, p_distribution, q_distribution, f, ff):
+    def get_G_inputs(self, p_distribution, q_distribution, f):
         """Process the encoder feature and distributions for generation network"""
         f_m = torch.cat([f[-1].chunk(2)[0], f[-1].chunk(2)[0]], dim=0)
-        f_f = torch.cat([ff[-1].chunk(2)[0], ff[-1].chunk(2)[0]], dim=0)
         f_e = torch.cat([f[2].chunk(2)[0], f[2].chunk(2)[0]], dim=0)
         scale_mask = task.scale_img(self.mask, size=[f_e.size(2), f_e.size(3)])
         mask = torch.cat([scale_mask.chunk(3, dim=1)[0], scale_mask.chunk(3, dim=1)[0]], dim=0)
         z_p = p_distribution.rsample()
         z_q = q_distribution.rsample()
         z = torch.cat([z_p, z_q], dim=0)
-        return z, f_m, f_f, f_e, mask
+        return z, f_m, f_e, mask
 
     def forward(self):
         """Run forward processing to get the inputs"""
         # encoder process
-        _, ff = self.net_F(self.img_f, self.img_truth)  # reconstructive pipeline gets itself as a feature.
-        # This is experimental for now, the danger is it will use the feature image for reconstruction.
         distributions, f = self.net_E(self.img_m, self.img_c)
         p_distribution, q_distribution, self.kl_rec, self.kl_g = self.get_distribution(distributions)
 
         # decoder process
-        z, f_m, f_f, f_e, mask = self.get_G_inputs(p_distribution, q_distribution, f, ff)
-        results, attn = self.net_G(z, f_m, f_f, f_e, mask)
+        z, f_m, f_e, mask = self.get_G_inputs(p_distribution, q_distribution, f)
+        results, attn = self.net_G(z, f_m, f_e, mask)
         self.img_rec = []
         self.img_g = []
         for result in results:
