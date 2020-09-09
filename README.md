@@ -2,12 +2,15 @@
 # Virtual Glasses Try-On
 
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
-<br> <b> This repository contains 3 branches. The "pipeline" branch and the "master" branch represent two different approches, where in each we explore a different way of levereging image completion for virtual glasses try-on. </b>
+<br> <b> This repository contains 3 branches. The "pipeline_approach" branch and the "master" branch represent two different approches, where in each we explore a different way of leveraging image completion for virtual glasses try-on. The third branch "transfer-pluralistic" is used for pretraining of the "master" branch.</b>
 <br>
 <br>
-Given two images, one of the person who we want to try the glasses on ('original image'), and one of the desired glasses ('feature image'), we perform the following:
-1.	Generate a mask in the original image.
-2.	Generate an image with glasses using our novel approach, based on [pluralistic image completion](https://github.com/lyndonzheng/Pluralistic-Inpainting) network while using the mask from the previous step.
+<b>For details of the first approach see [README](https://github.com/ShlomoLibo/Pluralistic-Inpainting/blob/pipeline_approach/README.md) in pipeline_approach branch.</b>
+<br>
+<br>
+## Guided Image Completion for Virutal Glasses Try-On
+The input to our model is two images: one of the person who we want to try the glasses on ('original image'), and one of the desired glasses ('feature image'). 
+We are using a novel approach, based on [pluralistic image completion](https://github.com/lyndonzheng/Pluralistic-Inpainting) network  to generate an image with the desired glasses, using a fixed rectangular masked covering the eyes' area. 
 
 Our work utilizes previous research and is based on two earlier articles:
 
@@ -23,7 +26,7 @@ We are motivated by the success of the [perceptual loss](http://svl.stanford.edu
 ## Example results
 
 <img src='final_results.png' align="center">
-Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add a new one are on the left column, and the glasses we would like to add are on the upper row.
+Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add new ones to are on the left column, and the glasses we would like to add are on the top row.
 
 ## Prerequisites:
 Python 2.7 / 3.6, Pytorch 0.4, argparse, Pillow
