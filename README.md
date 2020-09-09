@@ -44,7 +44,13 @@ Download the pre-trained models using the following links: and put it under ```P
 - [Image completion model](https://drive.google.com/drive/folders/1giwKIj6kpTUv393-WN83_IUCyG2ingMD?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```.
 
 ## Evaluation
-For evaluating the model run:
+For evaluating the model first prepare the following files:
+<br>
+mbu/glasses_data/testA.txt - to contain paths of the 'original image' for which we want to try new glasses on.
+<br>
+mbu/glasses_data/testB.txt - to contain paths of the 'feature image' for which we want to take the glasses to try on from.
+<br>
+And then run the following:
 ```
 python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./celeba_random --img_file out/original_images --mask_file out/exp_masks --load_mask ./ --gpu 1 --gpu_id 1
 ```
