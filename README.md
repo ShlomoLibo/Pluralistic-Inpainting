@@ -62,7 +62,3 @@ For training the model used for segmentation and content transfer, run from mbu/
 ```
 python mask_train.py --root ./glasses_data --out ./glasses_experiment
 ```
-For training the model used for image completion, run from Pluralistic-Inpainting/ directory the following command:
-```
-python train.py --name celeba_random --img_file your_path_to_celebA --mask_type 0
-```
