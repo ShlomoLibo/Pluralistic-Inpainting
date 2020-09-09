@@ -1,4 +1,6 @@
 from options import test_options
+import PIL
+PIL.PILLOW_VERSION = PIL.__version__
 from dataloader import data_loader
 from model import create_model
 from util import visualizer
@@ -14,8 +16,6 @@ if __name__=='__main__':
     # create a model
     model = create_model(opt)
     model.eval()
-    # create a visualizer
-    visualizer = visualizer.Visualizer(opt)
 
     for i, data in enumerate(islice(dataset, opt.how_many)):
         model.set_input(data)
