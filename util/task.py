@@ -32,10 +32,10 @@ def center_mask(img):
     """Generates a center hole with 1/4*W and 1/4*H"""
     mask = torch.ones_like(img)
     size = img.size()
-    x = int(size[1] * 3 / 8)
-    y = int(size[2] / 8)
-    range_x = int(size[1] * 5 / 8)
-    range_y = int(size[2] * 7 / 8)
+    x = int(size[1] / 4)
+    y = int(size[2] / 4)
+    range_x = int(size[1] * 3 / 4)
+    range_y = int(size[2] * 3 / 4)
     mask[:, x:range_x, y:range_y] = 0
 
     return mask
