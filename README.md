@@ -29,6 +29,7 @@ Python 2.7 / 3.6, Pytorch 0.4, argparse, Pillow
 All models in this repositery are trained and tested on images from [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) (aligned and cropped) of size 128x128 pixles.
 <br>
 The dataset can be download using this [script](https://gist.github.com/charlesreid1/4f3d676b33b95fce83af08e4ec261822).
+For running preprocess.py also download list_attr_celeba.txt from the same place.
 <br>
 You can use the provided script preprocess.py in the mbu directory to split celebA into the desired format for training and testing our models:
 <br>
