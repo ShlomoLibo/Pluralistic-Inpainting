@@ -12,7 +12,7 @@ Our work utilizez previous research and is based on two earlier articles:
 
 ## Example results
 
-<img src='images/final_results.png' align="center">
+<img src='final_results.png' align="center">
 Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add a new one are on the first row, and the glasses we would like to add are on the left column.
 
 ## Prerequisites:
