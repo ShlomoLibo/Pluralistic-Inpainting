@@ -20,7 +20,7 @@ Our work utilizes previous research and is based on two earlier articles:
 ## Example results
 
 <img src='final_results.png' align="center">
-Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add a new one are on the first row, and the glasses we would like to add are on the left column.
+Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add new ones to are on the top row, and the glasses we would like to add are on the left column.
 
 ## Prerequisites:
 Python 2.7 / 3.6, Pytorch 0.4, argparse, Pillow
