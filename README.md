@@ -3,11 +3,16 @@
 
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
 This repository holds an implemantation for a system used for this task. 
-Our work utilizez previous research and is based on two earlier articles. [The first](https://github.com/rmokady/mbu-content-tansfer), presents a network that is used for image-to-image translation between two domains, where one contains additional information, for example glasses, in an unsupervised way. [The second](https://github.com/lyndonzheng/Pluralistic-Inpainting), presents an approach for pluralistic image completion, generating multiple plausible solutions for image completion. 
+<br>
+Our work utilizez previous research and is based on two earlier articles. 
+<br>
+[The first](https://github.com/rmokady/mbu-content-tansfer), presents a network that is used for image-to-image translation between two domains, where one contains additional information, for example glasses, in an unsupervised way.
+<br>
+[The second](https://github.com/lyndonzheng/Pluralistic-Inpainting), presents an approach for pluralistic image completion, generating multiple plausible solutions for image completion. 
 
 ## Example results
 
-<img src='images/free_form.gif' align="center">
+<img src='images/final_results.png' align="center">
 Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add a new one are on the first row, and the glasses we would like to add are on the left column.
 
 ## Prerequisites:
@@ -15,9 +20,14 @@ Python 2.7 / 3.6, Pytorch 0.4, argparse, Pillow
 
 ## Datasets and Preparation
 All models in this repositery are trained and teste on images from [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) (aligned and cropped) of size 128x128 pixles.
+<br>
 The dataset can be download using this [script](https://gist.github.com/charlesreid1/4f3d676b33b95fce83af08e4ec261822).
+<br>
 You can use the provided script preprocess.py in the mbu directory to split celebA into the desired format for training and testing our models:
-```python preprocess.py --root ./img_align_celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses ```
+<br>
+```
+python preprocess.py --root ./img_align_celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses 
+```
 
 ## Evaluation
 For evaluating the model run:
@@ -29,13 +39,18 @@ The input images are listed in Pluralistic_Inpainting/mbu/glasses_data in testA 
 
 ## Pretrained Models
 Download the pre-trained models using the following links: and put it under ```Pluralistic-Inpainting/``` directory.
-
-- [segmentation and content transfer model](https://drive.google.com/file/d/1dbJdtpNCDxSXJrNaUVc4IQnsCfyKoySO/view): Save this model under ```/Pluralistic_Inpainting``` and name it ```checkpoint```
+<br>
+- [segmentation and content transfer model](https://drive.google.com/file/d/1dbJdtpNCDxSXJrNaUVc4IQnsCfyKoySO/view): Save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
+<br>
 - [image completion model](https://drive.google.com/drive/folders/1zQnFkRAtjGCorOd0Mj9tfdApcAPbs6Kw): Save the files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```
 
 ## Training
 For training the model used for segmentation and content transfer, run from mbu/ directory the following command:
-```python mask_train.py --root ./glasses_data --out ./glasses_experiment```
+```
+python mask_train.py --root ./glasses_data --out ./glasses_experiment
+```
 
 For training the model used for image completion, run from Pluralistic-Inpainting/ directory the following command:
-```python train.py --name celeba_random --img_file your_path_to_celebA```
+```
+python train.py --name celeba_random --img_file your_path_to_celebA
+```
