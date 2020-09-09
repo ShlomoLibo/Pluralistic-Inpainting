@@ -70,8 +70,7 @@ def save_masks(args, e1, e2, d_a, d_b, iters):
                       '%s/masks_%06d.png' % (args.output_dir, iters),
                       normalize=True, nrow=args.num_display)
 
-
-
+##########################################
 def save_new_images(args, e1, e2, d_a, d_b, iters):
     test_orig, test_domA, test_domB = get_test_imgs(args, True)
     exps = []
@@ -79,6 +78,8 @@ def save_new_images(args, e1, e2, d_a, d_b, iters):
     final_img_dir = os.path.join(args.output_dir, "final_image")
     if not os.path.exists(final_img_dir):
         os.makedirs(final_img_dir)
+            
+   
     
     for i in range(args.num_display):
         with torch.no_grad():
@@ -109,13 +110,19 @@ def save_new_images(args, e1, e2, d_a, d_b, iters):
                       '%s/finals_%06d.png' % (final_img_dir, iters),
                       normalize=True, nrow=args.num_display+1)
 
+                      
+#######################################
+
 
 def get_test_imgs(args, readC):
+
+
     transform = torchvision.transforms.Compose([
         torchvision.transforms.Resize((args.resize, args.resize)),
         torchvision.transforms.ToTensor(),
         torchvision.transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
     ])
+    
     #original image
     domA_test = CustomDataset(os.path.join(args.root, 'testA.txt'), transform=transform)
     #feature image
@@ -123,25 +130,31 @@ def get_test_imgs(args, readC):
     #after removal
     if readC:
         domC_test = CustomDataset(os.path.join(args.root, 'testC.txt'), transform=transform)
+
     domA_test_loader = torch.utils.data.DataLoader(domA_test, batch_size=64,
                                                    shuffle=False, num_workers=0)
     domB_test_loader = torch.utils.data.DataLoader(domB_test, batch_size=64,
                                                    shuffle=False, num_workers=0)
+
     if readC:
         domC_test_loader = torch.utils.data.DataLoader(domC_test, batch_size=64,
                                                    shuffle=False, num_workers=0)
+
+
     for domA_img in domA_test_loader:
         if torch.cuda.is_available():
             domA_img = domA_img.cuda()
         domA_img = domA_img.view((-1, 3, args.resize, args.resize))
         domA_img = domA_img[:]
         break
+
     for domB_img in domB_test_loader:
         if torch.cuda.is_available():
             domB_img = domB_img.cuda()
         domB_img = domB_img.view((-1, 3, args.resize, args.resize))
         domB_img = domB_img[:]
         break
+
     if readC:
         for domC_img in domC_test_loader:
             if torch.cuda.is_available():
@@ -153,31 +166,39 @@ def get_test_imgs(args, readC):
         return domA_img, domB_img, domC_img
     return domA_img, domB_img, domB_img
     
+########################################
 
 def generate_masks(args):
     if args.gpu > -1:
         torch.cuda.set_device(args.gpu)
+    
     sep = 25
     resize = 128
+    
     e1 = E1(sep, resize // 64)
     e2 = E2(sep, resize // 64)
     d_a = D_A(resize // 64)
     d_b = D_B(resize // 64)
+
     if torch.cuda.is_available():
         e1 = e1.cuda()
         e2 = e2.cuda()
         d_a = d_a.cuda()
         d_b = d_b.cuda()
+
     args.load = args.load_mask
     if args.load != '':
         save_file = os.path.join(args.load, 'checkpoint')
         _iter = load_model_for_eval(save_file, e1, e2, d_a, d_b)
+
     e1 = e1.eval()
     e2 = e2.eval()
     d_a = d_a.eval()
     d_b = d_b.eval()
+    
     save_masks(args, e1, e2, d_a, d_b, _iter)
 
+#####################################################
 
 def remove_glasses(opt):
     dataset = data_loader.dataloader(opt)
@@ -186,9 +207,11 @@ def remove_glasses(opt):
     # create a model
     model = create_model(opt)
     model.eval()
+
     for i, data in enumerate(islice(dataset, opt.how_many)):
         model.set_input(data)
         model.test()
+
     testC_file = os.path.join(opt.root, 'testC.txt')
     with open(testC_file, "w") as f:
         for i in range(opt.num_display):
@@ -198,35 +221,45 @@ def remove_glasses(opt):
             else:
                 f.write("\n"+img_path)
 
+################
 
 def add_glasses(args):
     if args.gpu > -1:
        torch.cuda.set_device(args.gpu)
+    
     sep = 25
     resize = 128
+    
     e1 = E1(sep, resize // 64)
     e2 = E2(sep, resize // 64)
     d_a = D_A(resize // 64)
     d_b = D_B(resize // 64)
+
     if torch.cuda.is_available():
         e1 = e1.cuda()
         e2 = e2.cuda()
         d_a = d_a.cuda()
         d_b = d_b.cuda()
+
     args.load = args.load_transfer
     if args.load != '':
         save_file = os.path.join(args.load, 'checkpoint')
         _iter = load_model_for_eval(save_file, e1, e2, d_a, d_b)
+
     e1 = e1.eval()
     e2 = e2.eval()
     d_a = d_a.eval()
     d_b = d_b.eval()
+    
     save_new_images(args, e1, e2, d_a, d_b, _iter)
 
 
+
+################
 def run_pipeline(args, opt):
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
+    
     print("generating masks")
     generate_masks(args)
     print("removing glasses")
@@ -234,6 +267,8 @@ def run_pipeline(args, opt):
     print("adding glasses")
     add_glasses(args)
     
+  
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_img', default='')
@@ -282,9 +317,9 @@ if __name__ == '__main__':
     parser.add_argument('--display_single_pane_ncols', type=int, default=0, help='if positive, display all images in a single visidom web panel')
     parser.add_argument('--output_scale', type=int, default=4, help='# of number of the output scale')
     parser.add_argument('--isTrain', type=bool, default=False)
-
     args = parser.parse_args()
     opt = args
+
     str_ids = opt.gpu_ids.split(',')
     opt.gpu_ids = []
     for str_id in str_ids:
@@ -295,4 +330,3 @@ if __name__ == '__main__':
             torch.cuda.set_device(opt.gpu_ids[0])
     
     run_pipeline(args, opt)
-    
