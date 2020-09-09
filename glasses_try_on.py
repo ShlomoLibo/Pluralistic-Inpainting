@@ -171,7 +171,7 @@ def generate_masks(args):
     args.load = args.load_mask
     if args.load != '':
         save_file = os.path.join(args.load, 'checkpoint')
-        _iter = load_model_for_eval_pretrained(save_file, e1, e2, d_a, d_b)
+        _iter = load_model_for_eval(save_file, e1, e2, d_a, d_b)
     e1 = e1.eval()
     e2 = e2.eval()
     d_a = d_a.eval()
@@ -216,7 +216,7 @@ def add_glasses(args):
     args.load = args.load_transfer
     if args.load != '':
         save_file = os.path.join(args.load, 'checkpoint')
-        _iter = load_model_for_eval_pretrained(save_file, e1, e2, d_a, d_b)
+        _iter = load_model_for_eval(save_file, e1, e2, d_a, d_b)
     e1 = e1.eval()
     e2 = e2.eval()
     d_a = d_a.eval()
