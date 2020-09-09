@@ -28,20 +28,20 @@ def save_grid(opt, model, dataset):
                 exps.append(filler.fill_(0))
                 exps_mask.append(filler.fill_(0))
 
-            exps.append(imgs_f[i].unsqueeze(0))
-            exps_mask.append(imgs_f[i].unsqueeze(0))
+            exps.append(imgs_truth[i].unsqueeze(0))
+            exps_mask.append(imgs_masked[i].unsqueeze(0))
 
     for i in range(opt.num_display):
-        exps.append(imgs_truth[i].unsqueeze(0))
-        exps_mask.append(imgs_masked[i].unsqueeze(0))
+        exps.append(imgs_f[i].unsqueeze(0))
+        exps_mask.append(imgs_f[i].unsqueeze(0))
         for j in range(opt.num_display):
             with torch.no_grad():
                 # setting input manually
-                model.img_truth = imgs_truth[i].unsqueeze(0).cuda()
-                model.img_f = imgs_f[j].unsqueeze(0).cuda()
-                model.img_m = imgs_masked[i].unsqueeze(0).cuda()
-                model.img_c = imgs_c[i].unsqueeze(0).cuda()
-                model.mask = imgs_mask[i].unsqueeze(0).cuda()
+                model.img_truth = imgs_truth[j].unsqueeze(0).cuda()
+                model.img_f = imgs_f[i].unsqueeze(0).cuda()
+                model.img_m = imgs_masked[j].unsqueeze(0).cuda()
+                model.img_c = imgs_c[j].unsqueeze(0).cuda()
+                model.mask = imgs_mask[j].unsqueeze(0).cuda()
 
                 # running the model
                 model.forward()
