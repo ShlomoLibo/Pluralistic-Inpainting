@@ -36,19 +36,24 @@ You can use the provided script preprocess.py in the mbu directory to split cele
 python preprocess.py --root ./img_align_celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses 
 ```
 
-## Evaluation
-For evaluating the model run:
-```
-python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./Pluralistic-Inpainting-master/checkpoints/celeba_random --img_file out/ -mask_file out/masks --load_mask ./
-```
-The evaluation results will be saved at Pluralistic-Inpainting/out.
-The input images are listed in Pluralistic_Inpainting/mbu/glasses_data in testA (Images of people to try glasses on) and testB (image of the glasses we would like to try).
-
 ## Pretrained Models
 Download the pre-trained models using the following links: and put it under ```Pluralistic-Inpainting/``` directory.
 <br>
 - [Segmentation and content transfer model](https://drive.google.com/file/d/1oz32kB_91te4kEj8uuva9CwJPULtorep/view?usp=sharing): save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
 - [Image completion model](https://drive.google.com/drive/folders/1zQnFkRAtjGCorOd0Mj9tfdApcAPbs6Kw): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```.
+
+## Evaluation
+For evaluating the model run:
+```
+python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./checkpoints/celeba_random --img_file out/original_images -mask_file out/exps_masks --load_mask ./
+```
+Where:
+--load_transfer argument is the directory in which the content transfer model named "checkpoint" is saved.
+--name argument is the directory in which the image completion model is saved.
+--load_transfer argument is the directory in which the model that is used for segmentation and named "checkpoint" is saved.
+
+The evaluation results will be saved at Pluralistic-Inpainting/out.
+The input images are listed in Pluralistic_Inpainting/mbu/glasses_data in testA (Images of people to try glasses on) and testB (image of the glasses we would like to try).
 
 ## Training
 For training the model used for segmentation and content transfer, run from mbu/ directory the following command:
