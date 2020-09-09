@@ -320,7 +320,7 @@ class Auto_Attn(nn.Module):
 
         self.softmax = nn.Softmax(dim=-1)
 
-        self.model = ResBlock(int(input_nc*2), input_nc, input_nc, norm_layer=norm_layer, use_spect=True)
+        self.model = ResBlock(int(input_nc*1.5), input_nc, input_nc, norm_layer=norm_layer, use_spect=True)
 
     def forward(self, x, pre=None, mask=None):
         """
