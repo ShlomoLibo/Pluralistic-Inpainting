@@ -2,7 +2,7 @@
 # Virtual Glasses Try-On
 
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
-<br> <b> This repository contains 2 branches. The "pipeline_approach" branch and the "master" branch represent two different approches, where in each we explore a different way of leveraging image completion for virtual glasses try-on.</b>
+<br> <b> This repository contains two branches. The "pipeline_approach" branch and the "master" branch represent two different approches, where in each we explore a different way of leveraging image completion for virtual glasses try-on.</b>
 <br>
 <br>
 <b>For details of the first approach see [README](https://github.com/ShlomoLibo/Pluralistic-Inpainting/blob/pipeline_approach/README.md) in pipeline_approach branch.</b>
