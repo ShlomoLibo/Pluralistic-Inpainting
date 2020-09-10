@@ -45,7 +45,7 @@ python preprocess.py --root ./celeba --attributes ./list_attr_celeba.txt --dest 
 ## Pretrained Models
 Download the pre-trained models using the following links: and put it under ```Pluralistic-Inpainting/``` directory.
 <br>
-- [Image completion model](https://drive.google.com/drive/folders/1giwKIj6kpTUv393-WN83_IUCyG2ingMD?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba```.
+- [Image completion model](https://drive.google.com/file/d/14Xnbw-AXz0KqGWWGE-_r-tDBFi7dUQHO/view?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba```.
 
 for training only:
 - [content transfer model](https://drive.google.com/file/d/1oz32kB_91te4kEj8uuva9CwJPULtorep/view?usp=sharing): save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
@@ -53,7 +53,7 @@ for training only:
 ## Evaluation
 For evaluating the model run:
 ```
-python test.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_feature_file>  ./
+python test.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_feature_file>
 ```
 Where: <br>
 <b>img_file</b> is a .txt file contains a list of paths to images that glasses will be transfered onto. <br>
