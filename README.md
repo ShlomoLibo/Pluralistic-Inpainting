@@ -64,7 +64,7 @@ The pairing between images and feature images is random. For a single content tr
 The evaluation results will be saved at ./out.
 
 ## Training
-For training the model used for image completion, run from Pluralistic-Inpainting/ directory the following command:
+For training the model run from Pluralistic-Inpainting/ directory the following command:
 ```
 python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_file> --mbu_feature_extractor <checkpoint> 
 ```
@@ -72,13 +72,14 @@ Where: <br>
 <b>img_file</b> is a .txt file contains a list of paths to images with glasses. <br>
 <b>checkpoint</b> is the downloaded file from above (in the pre-trained models section).
   
-## Training With Transfer-Learning
+### Training With Transfer-Learning (Optional)
 We found that making use of transfer learning achieves significantly better results. To pretrain the model run:
 ```
 python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_file> --mbu_feature_extractor <checkpoint> --pretrain
 ```
+and then run the training command described above with the addition of a --continue_train flag.
+
 Where: <br>
 <b>img_file</b> is a .txt file contains a list of paths to images from CelebA. <br>
 <b>checkpoint</b> is the downloaded file from above (in the pre-trained models section). <br><br>
 
-Then run the training command described above with the addition of a --continue_train flag.
