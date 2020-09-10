@@ -26,7 +26,10 @@ class Pluralistic(BaseModel):
         """Initial the pluralistic model"""
         BaseModel.__init__(self, opt)
 
-        self.loss_names = ['kl_rec', 'kl_g', 'app_rec', 'app_g', 'ad_g', 'img_d', 'ad_rec', 'img_d_rec', 'feature_rec', 'feature_g']
+        if self.opt.pretrain:
+            self.loss_names = ['kl_rec', 'kl_g', 'app_rec', 'app_g', 'ad_g', 'img_d', 'ad_rec', 'img_d_rec']
+        else:
+            self.loss_names = ['kl_rec', 'kl_g', 'app_rec', 'app_g', 'ad_g', 'img_d', 'ad_rec', 'img_d_rec', 'feature_rec', 'feature_g']
         self.visual_names = ['img_m', 'img_c', 'img_f', 'img_truth', 'img_out', 'img_g', 'img_rec']
         self.value_names = ['u_m', 'sigma_m', 'u_post', 'sigma_post', 'u_prior', 'sigma_prior']
         self.model_names = ['E', 'G', 'D', 'F', 'D_rec']
@@ -198,7 +201,10 @@ class Pluralistic(BaseModel):
     def backward_D(self):
         """Calculate the GAN loss for the discriminators"""
         base_function._unfreeze(self.net_D, self.net_D_rec)
-        self.loss_img_d = self.backward_D_basic(self.net_D, self.img_f, self.img_g[-1])
+        if self.opt.pretrain:
+            self.loss_img_d = self.backward_D_basic(self.net_D, self.img_truth, self.img_g[-1])
+        else:
+            self.loss_img_d = self.backward_D_basic(self.net_D, self.img_f, self.img_g[-1])
         self.loss_img_d_rec = self.backward_D_basic(self.net_D_rec, self.img_truth, self.img_rec[-1])
 
     def backward_G(self):
@@ -228,11 +234,11 @@ class Pluralistic(BaseModel):
             elif self.opt.train_paths == "two":
                 loss_app_g += self.L1loss(img_fake_i*mask_i, img_real_i*mask_i)
 
-        # feature is currently available only at a 128x128 resolution. TODO: train feature extractor for all scales
-        self.loss_feature_rec = self.L2loss(self.mbu_feature_extractor(self.scale_img[-1]),
-                                            self.mbu_feature_extractor(self.img_rec[-1]))
-        self.loss_feature_g = self.L2loss(self.mbu_feature_extractor(self.img_f),
-                                          self.mbu_feature_extractor(self.img_g[-1]))
+        if not self.opt.pretrain:
+            self.loss_feature_rec = self.L2loss(self.mbu_feature_extractor(self.scale_img[-1]),
+                                                self.mbu_feature_extractor(self.img_rec[-1]))
+            self.loss_feature_g = self.L2loss(self.mbu_feature_extractor(self.img_f),
+                                              self.mbu_feature_extractor(self.img_g[-1]))
 
         self.loss_app_rec = loss_app_rec * self.opt.lambda_rec
         self.loss_app_g = loss_app_g * self.opt.lambda_rec

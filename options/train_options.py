@@ -19,6 +19,9 @@ class TrainOptions(BaseOptions):
         # feature extractor path
         parser.add_argument('--mbu_feature_extractor', type=str, help="the E_s feature extractor path from the mbu-content-transfer paper")
 
+        # pretrain
+        parser.add_argument('--pretrain', action='store_true', help='is pretrain on whole CelebA')
+
         # display the results
         parser.add_argument('--display_freq', type=int, default=100, help='frequency of showing training results on screen')
         parser.add_argument('--print_freq', type=int, default=100, help='frequency of showing training results on console')

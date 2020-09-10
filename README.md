@@ -2,7 +2,7 @@
 # Virtual Glasses Try-On
 
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
-<br> <b> This repository contains 3 branches. The "pipeline_approach" branch and the "master" branch represent two different approches, where in each we explore a different way of leveraging image completion for virtual glasses try-on. The third branch "transfer-pluralistic" is used for pretraining of the "master" branch.</b>
+<br> <b> This repository contains 2 branches. The "pipeline_approach" branch and the "master" branch represent two different approches, where in each we explore a different way of leveraging image completion for virtual glasses try-on.</b>
 <br>
 <br>
 <b>For details of the first approach see [README](https://github.com/ShlomoLibo/Pluralistic-Inpainting/blob/pipeline_approach/README.md) in pipeline_approach branch.</b>
@@ -73,12 +73,12 @@ Where: <br>
 <b>checkpoint</b> is the downloaded file from above (in the pre-trained models section).
   
 ## Training With Transfer-Learning
-We found that making use of transfer learning achieves significantly better results. To pretrain the model on celeba run the project under the "pluralistic-transfer" branch with the following command:
+We found that making use of transfer learning achieves significantly better results. To pretrain the model run:
 ```
-python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_file> --mbu_feature_extractor <checkpoint> 
+python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_file> --mbu_feature_extractor <checkpoint> --pretrain
 ```
 Where: <br>
 <b>img_file</b> is a .txt file contains a list of paths to images from CelebA. <br>
 <b>checkpoint</b> is the downloaded file from above (in the pre-trained models section). <br><br>
 
-Then run the master branch as described above with the addition of a --continue_train flag.
+Then run the training command described above with the addition of a --continue_train flag.

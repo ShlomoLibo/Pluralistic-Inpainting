@@ -40,6 +40,14 @@ class CreateDataset(data.Dataset):
         return img, img_path
 
     def load_img_feature(self, index):
+        if self.opt.pretrain:
+            random_img = Image.new('RGB', (256, 256))
+            pixels = random_img.load()
+            for x in range(random_img.size[0]):
+                for y in range(random_img.size[1]):
+                    pixels[x, y] = (random.randint(0, 255), random.randint(0, 255), random.randint(0,255))
+            random_img = self.transform(random_img)
+            return random_img, ""
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         img_feature_path = self.img_feature_paths[random.randint(0, self.img_feature_size -1)]
         img_feature_pil = Image.open(img_feature_path).convert('RGB')
@@ -49,8 +57,11 @@ class CreateDataset(data.Dataset):
 
     def load_mask(self, img, index):
         """Load different mask types for training and testing"""
-        mask_type_index = random.randint(0, len(self.opt.mask_type) - 1)
-        mask_type = self.opt.mask_type[mask_type_index]
+        if self.opt.pretrain:
+            mask_type = random.randint(0, 2)
+        else:
+            mask_type_index = random.randint(0, len(self.opt.mask_type) - 1)
+            mask_type = self.opt.mask_type[mask_type_index]
 
         # center mask
         if mask_type == 0:
