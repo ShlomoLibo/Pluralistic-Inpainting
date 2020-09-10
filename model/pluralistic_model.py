@@ -100,19 +100,22 @@ class Pluralistic(BaseModel):
         # save the groundtruth and masked image
         self.save_results(self.img_truth, data_name='truth')
         self.save_results(self.img_m, data_name='mask')
-
+        self.save_results(self.img_f, data_name='feature')
         # encoder process
         distribution, f = self.net_E(self.img_m)
         q_distribution = torch.distributions.Normal(distribution[-1][0], distribution[-1][1])
         scale_mask = task.scale_img(self.mask, size=[f[2].size(2), f[2].size(3)])
 
+        _, ff = self.net_F(self.img_f)
+
         # decoder process
         for i in range(self.opt.nsampling):
             z = q_distribution.sample()
-            self.img_g, attn = self.net_G(z, f_m=f[-1], f_e=f[2], mask=scale_mask.chunk(3, dim=1)[0])
+            self.img_g, attn = self.net_G(z, f_m=f[-1], f_f=ff[-1], f_e=f[2], mask=scale_mask.chunk(3, dim=1)[0])
             self.img_out = (1 - self.mask) * self.img_g[-1].detach() + self.mask * self.img_m
             self.score = self.net_D(self.img_out)
             self.save_results(self.img_out, i, data_name='out')
+
 
     def get_distribution(self, distributions):
         """Calculate encoder distribution for img_m, img_c"""
