@@ -1,6 +1,7 @@
 
 # Virtual Glasses Try-On
 
+## Content Transfer and Image Completion to Achieve Virtual Glasses Try-On  ##
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
 This repository holds an implemantation for a system used for this task. 
 <br>
@@ -20,7 +21,7 @@ Our work utilizes previous research and is based on two earlier articles:
 ## Example results
 
 <img src='final_results.png' align="center">
-Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add new ones to are on the top row, and the glasses we would like to add are on the left column.
+Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the glasses from and add new ones to are on the top row, and the glasses we would like to add are on the left column.
 
 ## Prerequisites:
 Python 2.7 / 3.6, Pytorch 0.4, argparse, Pillow
@@ -34,11 +35,11 @@ For running preprocess.py also download list_attr_celeba.txt from the same place
 You can use the provided script preprocess.py in the mbu directory to split celebA into the desired format for training and testing our models:
 <br>
 ```
-python preprocess.py --root ./img_align_celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses 
+python preprocess.py --root ./celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses 
 ```
 
 ## Pretrained Models
-Download the pre-trained models using the following links: and put it under ```Pluralistic-Inpainting/``` directory.
+Download the pre-trained models using the following links:
 <br>
 - [Segmentation and content transfer model](https://drive.google.com/file/d/1oz32kB_91te4kEj8uuva9CwJPULtorep/view?usp=sharing): save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
 - [Image completion model](https://drive.google.com/drive/folders/1giwKIj6kpTUv393-WN83_IUCyG2ingMD?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```.
