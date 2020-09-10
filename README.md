@@ -36,7 +36,7 @@ All models in this repositery are trained and tested on images from [CelebA data
 <br>
 The dataset can be download using this [script](https://gist.github.com/charlesreid1/4f3d676b33b95fce83af08e4ec261822).
 <br>
-You can use the provided script preprocess.py in the mbu directory to split celebA into the desired format for training and testing our models:
+You can use the provided script preprocess.py in the mbu directory to split CelebA into the desired format for training and testing our models:
 <br>
 ```
 python preprocess.py --root ./celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses 
@@ -45,7 +45,7 @@ python preprocess.py --root ./celeba --attributes ./list_attr_celeba.txt --dest 
 ## Pretrained Models
 Download the pre-trained models using the following links:
 <br>
-- [Image completion model](https://drive.google.com/file/d/14Xnbw-AXz0KqGWWGE-_r-tDBFi7dUQHO/view?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba```.
+- [image completion model](https://drive.google.com/file/d/14Xnbw-AXz0KqGWWGE-_r-tDBFi7dUQHO/view?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba```.
 
 for training only:
 - [content transfer model](https://drive.google.com/file/d/1oz32kB_91te4kEj8uuva9CwJPULtorep/view?usp=sharing)
