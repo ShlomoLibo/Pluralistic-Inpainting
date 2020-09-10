@@ -29,7 +29,7 @@ We are motivated by the success of the [perceptual loss](http://svl.stanford.edu
 Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add new ones to are on the left column, and the glasses we would like to add are on the top row.
 
 ## Prerequisites:
-Python 2.7 / 3.6, Pytorch 0.4, argparse, Pillow
+Python 3.6, Pytorch 0.4, argparse, Pillow
 
 ## Datasets and Preparation
 All models in this repositery are trained and tested on images from [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) (aligned and cropped) of size 128x128 pixles.
