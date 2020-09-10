@@ -2,10 +2,10 @@
 # Virtual Glasses Try-On
 
 The task of virtual glasses try-on, that is, replacing the glasses in an image, consists of removing the glasses feature from an image and transferring new glasses to it. 
-<br> <b> This repository contains two branches. The "pipeline_approach" branch and the "master" branch represent two different approches, where in each we explore a different way of leveraging image completion for virtual glasses try-on.</b>
+<br> <b> This repository contains two branches. The "pipeline_approach" branch and the "master" branch represent two different approches, where in each we explore a different way of leveraging image completion and content transfer methods for virtual glasses try-on.</b>
 <br>
 <br>
-<b>For details of the first approach see [README](https://github.com/ShlomoLibo/Pluralistic-Inpainting/blob/pipeline_approach/README.md) in pipeline_approach branch.</b>
+<b>For details of the first approach see [README](https://github.com/ShlomoLibo/Pluralistic-Inpainting/blob/pipeline_approach/README.md) in "pipeline_approach" branch.</b>
 <br>
 <br>
 ## Guided Image Completion for Virutal Glasses Try-On
@@ -18,7 +18,7 @@ Our work utilizes previous research and is based on two earlier articles:
 <br>
 [The second](https://github.com/lyndonzheng/Pluralistic-Inpainting), presents an approach for pluralistic image completion, generating multiple plausible solutions for image completion. 
 
-Concretely, we utilize the Es network presented [here](https://github.com/rmokady/mbu-content-tansfer) to evaluate how closely the glasses in the resulted image resemble the glasses in the feature image. We use an L2 distance measure.
+Concretely, we utilize the Es network presented in the [first article](https://github.com/rmokady/mbu-content-tansfer) to evaluate how closely the glasses in the resulted image resemble the glasses in the feature image. We use an L2 distance measure.
 We are motivated by the success of the [perceptual loss](http://svl.stanford.edu/assets/papers/JohnsonECCV16.pdf) approach.
 
 
@@ -26,7 +26,7 @@ We are motivated by the success of the [perceptual loss](http://svl.stanford.edu
 ## Example results
 
 <img src='final_results.png' align="center">
-Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the old glasses from and add new ones to are on the left column, and the glasses we would like to add are on the top row.
+Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the glasses from and add new ones to are on the left column, and the glasses we would like to add are on the top row.
 
 ## Prerequisites:
 Python 3.6, Pytorch 0.4, argparse, Pillow
@@ -39,7 +39,7 @@ The dataset can be download using this [script](https://gist.github.com/charlesr
 You can use the provided script preprocess.py in the mbu directory to split celebA into the desired format for training and testing our models:
 <br>
 ```
-python preprocess.py --root ./img_align_celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses 
+python preprocess.py --root ./celeba --attributes ./list_attr_celeba.txt --dest ./glasses_data --config glasses 
 ```
 
 ## Pretrained Models
