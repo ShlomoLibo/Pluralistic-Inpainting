@@ -45,30 +45,40 @@ python preprocess.py --root ./img_align_celeba --attributes ./list_attr_celeba.t
 ## Pretrained Models
 Download the pre-trained models using the following links: and put it under ```Pluralistic-Inpainting/``` directory.
 <br>
-- [Segmentation and content transfer model](https://drive.google.com/file/d/1oz32kB_91te4kEj8uuva9CwJPULtorep/view?usp=sharing): save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
-- [Image completion model](https://drive.google.com/drive/folders/1giwKIj6kpTUv393-WN83_IUCyG2ingMD?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba_random```.
+- [Image completion model](https://drive.google.com/drive/folders/1giwKIj6kpTUv393-WN83_IUCyG2ingMD?usp=sharing): save the downloaded files in ```/Pluralistic_Inpainting/checkpoints/celeba```.
+
+for training only:
+- [content transfer model](https://drive.google.com/file/d/1oz32kB_91te4kEj8uuva9CwJPULtorep/view?usp=sharing): save this model in ```/Pluralistic_Inpainting``` and name it ```checkpoint```
 
 ## Evaluation
 For evaluating the model run:
 ```
-python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./celeba_random --img_file out/original_images --mask_file out/exp_masks --mask_type 3 --load_mask ./
+python test.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_feature_file>  ./
 ```
 Where:
---load_transfer argument is the directory in which the content transfer model named "checkpoint" is saved.
-<br>
---name argument is the directory in which the image completion model is saved.
-<br>
---load_transfer argument is the directory in which the model that is used for segmentation and named "checkpoint" is saved.
+<img_file> is a .txt file contains a list of paths to images that glasses will be transfered onto.
+<img_feature_file> is a .txt file contains a list of paths of people with glasses, which will be transfered.
+use --grid for a grid result display (similar to the one shown above).
+The pairing between images and feature images is random. For a single content transfer include only one image in each .txt.
 
-The evaluation results will be saved at Pluralistic-Inpainting/out.
-The input images are listed in Pluralistic_Inpainting/mbu/glasses_data in testA (Images of people to try glasses on) and testB (image of the glasses we would like to try).
+The evaluation results will be saved at ./out.
 
 ## Training
-For training the model used for segmentation and content transfer, run from mbu/ directory the following command:
-```
-python mask_train.py --root ./glasses_data --out ./glasses_experiment
-```
 For training the model used for image completion, run from Pluralistic-Inpainting/ directory the following command:
 ```
-python train.py --name celeba_random --img_file your_path_to_celebA --mask_type 0
+python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_file> --mbu_feature_extractor <checkpoint> 
 ```
+Where:
+<img_file> is a .txt file contains a list of paths to images with glasses.
+<checkpoint> is the downloaded file from above (in the pre-trained models section).
+  
+## Training With Transfer-Learning
+We found that making use of transfer learning achieves significantly better results. To pretrain the model on celeba run the project under the "pluralistic-transfer" branch with the following command:
+```
+python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_file> --mbu_feature_extractor <checkpoint> 
+```
+Where:
+<img_file> is a .txt file contains a list of paths to images from CelebA.
+<checkpoint> is the downloaded file from above (in the pre-trained models section).
+
+Then run the master branch as described above with the addition of a --continue_train flag.
