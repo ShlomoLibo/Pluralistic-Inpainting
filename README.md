@@ -56,8 +56,8 @@ For evaluating the model run:
 python test.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_feature_file>
 ```
 Where: <br>
-<b>img_file</b> is a .txt file contains a list of paths to images that glasses will be transfered onto. <br>
-<b>img_feature_file</b> is a .txt file contains a list of paths of people with glasses, which will be transfered. <br>
+```img_file``` is a .txt file contains a list of paths to images that glasses will be transfered onto. <br>
+```img_feature_file``` is a .txt file contains a list of paths of people with glasses, which will be transfered. <br>
 Use --grid for a grid result display (similar to the one shown above). <br>
 The pairing between images and feature images is random. For a single content transfer include only one image in each .txt. <br> <br>
 
@@ -69,8 +69,8 @@ For training the model run from Pluralistic-Inpainting/ directory the following 
 python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature_file <img_file> --mbu_feature_extractor <checkpoint> 
 ```
 Where: <br>
-<b>img_file</b> is a .txt file contains a list of paths to images with glasses. <br>
-<b>checkpoint</b> is the downloaded file from above (in the pre-trained models section).
+```img_file``` is a .txt file contains a list of paths to images with glasses. <br>
+```checkpoint``` is the downloaded file from above (in the pre-trained models section).
   
 ### Training With Transfer-Learning (Optional)
 We found that making use of transfer learning achieves significantly better results. To pretrain the model run:
@@ -80,6 +80,6 @@ python train.py --name celeba --display_id 0 --img_file <img_file> --img_feature
 and then run the training command described above with the addition of a --continue_train flag.
 
 Where: <br>
-<b>img_file</b> is a .txt file contains a list of paths to images from CelebA. <br>
-<b>checkpoint</b> is the downloaded file from above (in the pre-trained models section). <br><br>
+```img_file``` is a .txt file contains a list of paths to images from CelebA. <br>
+```checkpoint``` is the downloaded file from above (in the pre-trained models section). <br><br>
 
