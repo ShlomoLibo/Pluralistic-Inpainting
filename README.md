@@ -24,7 +24,7 @@ Our work utilizes previous research and is based on two earlier articles:
 Example of virtual glasses try on for multiple types of glasses and diverse people. The people from which we would like to remove the glasses from and add new ones to are on the top row, and the glasses we would like to add are on the left column.
 
 ## Prerequisites:
-Python 2.7 / 3.6, Pytorch 0.4, argparse, Pillow
+Python 3.6, Pytorch 0.4, argparse, Pillow
 
 ## Datasets and Preparation
 All models in this repositery are trained and tested on images from [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) (aligned and cropped) of size 128x128 pixles.
@@ -47,23 +47,24 @@ Download the pre-trained models using the following links:
 ## Evaluation
 For evaluating the model first prepare the following files:
 <br>
-mbu/glasses_data/testA.txt - to contain paths of the 'original image' for which we want to try new glasses on.
+mbu/glasses_data/testA.txt - to contain list of the paths of the 'original images' for which we want to try new glasses on.
 <br>
-mbu/glasses_data/testB.txt - to contain paths of the 'feature image' for which we want to take the glasses to try on from.
+mbu/glasses_data/testB.txt - to contain list of the paths of the 'feature images' for which we want to take the glasses to try-on from.
+<br>
 <br>
 And then run the following:
 ```
 python glasses_try_on.py --load_transfer ./ --output_dir ./out --root ./mbu/glasses_data --name ./celeba_random --img_file out/original_images --mask_file out/exp_masks --load_mask ./ --gpu 1 --gpu_ids 1
 ```
 Where:
-load_transfer argument is the directory in which the content transfer model named "checkpoint" is saved.
 <br>
-name argument is the directory in which the image completion model is saved.
+```--load_transfer``` argument is the directory in which the content transfer model named "checkpoint" is saved.
 <br>
-load_transfer argument is the directory in which the model that is used for segmentation and named "checkpoint" is saved.
+```--name``` argument is the directory in which the image completion model is saved.
+<br>
+```--load_transfer``` argument is the directory in which the model that is used for segmentation and named "checkpoint" is saved.
 <br>
 The evaluation results will be saved at Pluralistic-Inpainting/out.
-The input images are listed in Pluralistic_Inpainting/mbu/glasses_data in testA (Images of people to try glasses on) and testB (image of the glasses we would like to try).
 
 ## Training
 For training the model used for segmentation and content transfer, run from mbu/ directory the following command:
